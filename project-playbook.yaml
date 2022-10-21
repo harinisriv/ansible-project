@@ -1,0 +1,20 @@
+- hosts: webservers
+  user: ubuntu
+  become_user: root
+  become_method: sudo
+  become: yes
+
+  tasks:
+    - name: Copy jar files to remote from target folder
+      copy:
+        src: /root/spring-petclinic/target
+        dest: /root/
+        force: no
+    - name: Install java on remote servers
+      apt:
+        name: openjdk-8-jdk-headless
+        state: present
+        update_cache: yes
+    - name: Change the directory and run the jar file
+      shell: cd /root/target; nohup java -jar spring-petclinic-2.7.0-SNAPSHOT.jar & exit
+
